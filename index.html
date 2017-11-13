@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+	<div class="timer-countdown"></div>
+	<script type="text/javascript">
+
+		function TimerCountdown(time, selector = '.timer-countdown'){
+			this.time = new Number(time);
+			this.selector = selector;
+		}
+
+		TimerCountdown.prototype.decrementTime = function() {
+			this.time = --this.time;
+		};
+
+		TimerCountdown.prototype.startCountdown = function() {
+			// Se o time não for zerado
+			if((this.time) > 0){
+
+				this.calculatorRemaingTime();
+
+				this.showRemaingTime();
+
+				this.decrementTime();
+
+				setTimeout(function(){
+					this.startCountdown();
+				}.bind(this),1000);
+
+			// Quando o contador chegar a zero faz esta ação
+			} else {
+				this.resetTime();
+			}
+		};
+
+		TimerCountdown.prototype.showRemaingTime = function() {
+			this.horaImprimivel = this.hour+ ':' + this.min + ':' + this.seg;
+			$(this.selector).html(this.horaImprimivel);
+		};
+
+		TimerCountdown.prototype.resetTime = function() {
+			this.horaImprimivel = '00:00:00';
+			$(this.selector).html(this.horaImprimivel);
+		};
+
+		TimerCountdown.prototype.calculatorRemaingTime = function() {
+			// Pega a parte inteira das horas
+			this.hour = parseInt(this.time/60/60);
+
+			// Pega a parte inteira dos minutos
+			this.min = parseInt(this.time/60) % 60;
+
+			// Calcula os segundos restantes
+			this.seg = this.time % 60;
+
+			if(this.min < 10){
+				this.min = "0"+this.min;
+				this.min = this.min.substr(0, 2);
+			}
+
+			if(this.hour < 10){
+				this.hour = "0"+this.hour;
+			}
+
+			if(this.seg < 10){
+				this.seg = "0"+this.seg;
+			}
+				
+		};
+
+		var countdownTimer = new TimerCountdown(180);
+
+		countdownTimer.startCountdown();
+
+	</script>
+</body>
+</html>
